@@ -12,11 +12,11 @@ Hooks.once("ready", () => {
 
     if (this.arrowSprite) return result;
 
-    const texture = PIXI.Texture.from("modules/token-ring-arrow/assets/triangle-arrow.webp");
+    const texture = PIXI.Texture.from("modules/token-ring-arrow/assets/ring-arrow.webp");
 
     // Optional check to verify image actually loaded
     if (!texture.baseTexture.valid) {
-      console.warn("❗ triangle-arrow.webp could not be loaded.");
+      console.warn("❗ ring-arrow.webp could not be loaded.");
       return result;
     }
 
