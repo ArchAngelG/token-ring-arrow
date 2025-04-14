@@ -4,9 +4,8 @@ Hooks.once("ready", () => {
   libWrapper.register("token-ring-arrow", "Token.prototype.drawEffects", function (wrapped, ...args) {
     const result = wrapped(...args);
 
-    // Wait until effectsContainer exists
     if (!this.effectsContainer) {
-      console.warn("❗ effectsContainer not ready for token:", this.name);
+      console.warn(`⚠️ Token '${this.name}' has no effectsContainer yet.`);
       return result;
     }
 
@@ -14,9 +13,8 @@ Hooks.once("ready", () => {
 
     const texture = PIXI.Texture.from("modules/token-ring-arrow/assets/ring-arrow.webp");
 
-    // Optional check to verify image actually loaded
     if (!texture.baseTexture.valid) {
-      console.warn("❗ ring-arrow.webp could not be loaded.");
+      console.warn("❗ Image failed to load:", texture.baseTexture.resource?.url);
       return result;
     }
 
@@ -31,8 +29,7 @@ Hooks.once("ready", () => {
     this.effectsContainer.addChild(arrow);
     this.arrowSprite = arrow;
 
-    console.log("✅ Arrow sprite added to token:", this.name);
-
+    console.log(`✅ Arrow sprite added to token: ${this.name}`);
     return result;
   }, 'WRAPPER');
 
