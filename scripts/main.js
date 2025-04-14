@@ -4,25 +4,34 @@ Hooks.once("ready", () => {
   libWrapper.register("token-ring-arrow", "Token.prototype.drawEffects", function (wrapped, ...args) {
     const result = wrapped(...args);
 
+    // Wait until effectsContainer exists
+    if (!this.effectsContainer) {
+      console.warn("❗ effectsContainer not ready for token:", this.name);
+      return result;
+    }
+
     if (this.arrowSprite) return result;
 
-    // Load the triangle arrow sprite
     const texture = PIXI.Texture.from("modules/token-ring-arrow/assets/triangle-arrow.webp");
+
+    // Optional check to verify image actually loaded
+    if (!texture.baseTexture.valid) {
+      console.warn("❗ triangle-arrow.webp could not be loaded.");
+      return result;
+    }
+
     const arrow = new PIXI.Sprite(texture);
-
     arrow.anchor.set(0.5);
-    arrow.width = this.w * 0.5;  // Adjust size as needed
+    arrow.width = this.w * 0.5;
     arrow.height = this.h * 0.5;
-    arrow.zIndex = 100;
-
-    // Position the arrow at the top edge of the token
     arrow.position.set(this.w / 2, 0);
-
-    // Rotate to match token's facing
     arrow.rotation = Math.toRadians(this.document.rotation);
+    arrow.zIndex = 100;
 
     this.effectsContainer.addChild(arrow);
     this.arrowSprite = arrow;
+
+    console.log("✅ Arrow sprite added to token:", this.name);
 
     return result;
   }, 'WRAPPER');
