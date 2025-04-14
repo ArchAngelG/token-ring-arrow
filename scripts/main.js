@@ -1,3 +1,5 @@
+ui.notifications.info("🧠 Token Ring Arrow module is running.");
+console.log("🧠 Token Ring Arrow script loaded.");
 Hooks.once("ready", () => {
   console.log("🧪 Token Ring Arrow: Testing basic triangle draw");
 
