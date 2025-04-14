@@ -14,7 +14,7 @@ Hooks.once("ready", () => {
     const texture = PIXI.Texture.from("modules/token-ring-arrow/assets/ring-arrow.webp");
 
     if (!texture.baseTexture.valid) {
-      console.warn("❗ Image failed to load:", texture.baseTexture.resource?.url);
+      console.warn("❗ ring-arrow.webp could not be loaded or hasn't been cached.");
       return result;
     }
 
