@@ -1,52 +1,35 @@
 Hooks.once("ready", () => {
-  console.log("🧭 Token Ring Arrow Module Ready");
+  console.log("🧪 Token Ring Arrow: Testing basic triangle draw");
 
   libWrapper.register("token-ring-arrow", "Token.prototype.drawEffects", function (wrapped, ...args) {
     const result = wrapped(...args);
 
     if (this.arrowSprite || !this.visible) return result;
 
-    const tryAddArrow = (attempt = 0) => {
+    const tryDrawTriangle = (attempt = 0) => {
       if (!this.effectsContainer) {
         if (attempt < 10) {
-          setTimeout(() => tryAddArrow(attempt + 1), 100);
-        } else {
-          console.warn(`❗ effectsContainer still not available for ${this.name} after 10 attempts`);
+          return setTimeout(() => tryDrawTriangle(attempt + 1), 100);
         }
+        console.warn(`❗ Still no effectsContainer for ${this.name}`);
         return;
       }
 
-      const texture = PIXI.Texture.from("modules/token-ring-arrow/assets/ring-arrow.webp");
-      if (!texture.baseTexture.valid) {
-        console.warn("❗ Image 'ring-arrow.webp' is not valid or failed to load.");
-        return;
-      }
+      const arrow = new PIXI.Graphics();
+      arrow.beginFill(0x00ff00, 0.9); // bright green
+      arrow.lineStyle(2, 0x000000);
+      arrow.drawPolygon([0, -20, 12, 10, -12, 10]);
+      arrow.endFill();
 
-      const arrow = new PIXI.Sprite(texture);
-      arrow.anchor.set(0.5);
-      arrow.width = this.w * 0.5;
-      arrow.height = this.h * 0.5;
       arrow.position.set(this.w / 2, 0);
-      arrow.rotation = Math.toRadians(this.document.rotation);
       arrow.zIndex = 100;
-      arrow.alpha = 1;
-
       this.effectsContainer.addChild(arrow);
       this.arrowSprite = arrow;
 
-      console.log(`✅ Arrow sprite added to: ${this.name}`);
+      console.log(`✅ Green triangle added to: ${this.name}`);
     };
 
-    tryAddArrow();
-
+    tryDrawTriangle();
     return result;
   }, 'WRAPPER');
-
-  Hooks.on("updateToken", (doc, change) => {
-    const token = canvas.tokens.get(doc.id);
-    if (!token || !token.arrowSprite) return;
-
-    const rotation = change.rotation ?? doc.rotation;
-    token.arrowSprite.rotation = Math.toRadians(rotation);
-  });
 });
