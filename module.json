@@ -22,7 +22,7 @@
   "download": "https://github.com/ArchAngelG/token-ring-arrow/archive/refs/heads/main.zip",
   "dependencies": [
   {
-    "id": "lib-wrapper",
+    "name": "lib-wrapper",
     "type": "module"
   }
 ]
