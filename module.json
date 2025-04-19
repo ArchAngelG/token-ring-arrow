@@ -2,7 +2,7 @@
   "id": "token-ring-arrow",
   "title": "Token Ring Arrow",
   "description": "Replaces token rotation with ring rotation and adds an arrow.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "authors": [
     {
     "name": "ArchAngel_G"
