@@ -11,7 +11,7 @@
  "compatibility": {
     "minimum": "11",
     "verified": "11"
-  }
+  },
   "scripts": ["scripts/main.js"],
   "styles": ["styles/style.css"],
   "esmodules": [],
@@ -19,11 +19,5 @@
   "languages": [],
   "url": "https://github.com/ArchAngelG/token-ring-arrow",
   "manifest": "https://raw.githubusercontent.com/ArchAngelG/token-ring-arrow/main/module.json",
-  "download": "https://github.com/ArchAngelG/token-ring-arrow/archive/refs/heads/main.zip",
-  "dependencies": [
-  {
-    "name": "lib-wrapper",
-    "type": "module"
-  }
-]
+  "download": "https://github.com/ArchAngelG/token-ring-arrow/archive/refs/heads/main.zip"
 }
