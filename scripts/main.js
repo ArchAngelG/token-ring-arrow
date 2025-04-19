@@ -1,21 +1,14 @@
 Hooks.once("ready", () => {
-  ui.notifications.info("🚀 main.js updated and running!");
-  console.log("🚀 main.js updated and running!");
-});
-Hooks.once("ready", () => {
-  console.log("🧪 Token Ring Arrow: Testing basic triangle draw");
+  ui.notifications.info("✅ Token Ring Arrow module is running!");
 
-  libWrapper.register("token-ring-arrow", "Token.prototype.drawEffects", function (wrapped, ...args) {
-    const result = wrapped(...args);
+  for (const token of canvas.tokens.placeables) {
+    // Retry drawing for up to 10 attempts
+    let attempt = 0;
 
-    if (this.arrowSprite || !this.visible) return result;
-
-    const tryDrawTriangle = (attempt = 0) => {
-      if (!this.effectsContainer) {
-        if (attempt < 10) {
-          return setTimeout(() => tryDrawTriangle(attempt + 1), 100);
-        }
-        console.warn(`❗ Still no effectsContainer for ${this.name}`);
+    const drawTriangle = () => {
+      if (!token.effectsContainer) {
+        if (attempt++ < 10) return setTimeout(drawTriangle, 100);
+        console.warn(`❗ No effectsContainer for ${token.name}`);
         return;
       }
 
@@ -25,15 +18,14 @@ Hooks.once("ready", () => {
       arrow.drawPolygon([0, -20, 12, 10, -12, 10]);
       arrow.endFill();
 
-      arrow.position.set(this.w / 2, 0);
+      arrow.anchor?.set?.(0.5); // try to center, just in case
+      arrow.position.set(token.w / 2, 0);
       arrow.zIndex = 100;
-      this.effectsContainer.addChild(arrow);
-      this.arrowSprite = arrow;
 
-      console.log(`✅ Green triangle added to: ${this.name}`);
+      token.effectsContainer.addChild(arrow);
+      console.log(`✅ Triangle added to: ${token.name}`);
     };
 
-    tryDrawTriangle();
-    return result;
-  }, 'WRAPPER');
+    drawTriangle();
+  }
 });
