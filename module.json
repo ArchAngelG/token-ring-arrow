@@ -20,10 +20,10 @@
   "url": "https://github.com/ArchAngelG/token-ring-arrow",
   "manifest": "https://raw.githubusercontent.com/ArchAngelG/token-ring-arrow/main/module.json",
   "download": "https://github.com/ArchAngelG/token-ring-arrow/archive/refs/heads/main.zip",
-  "relationships.requires": [
-    {
-      "id": "lib-wrapper",
-      "type": "module"
-    }
-  ]
+  "dependencies": [
+  {
+    "id": "lib-wrapper",
+    "type": "module"
+  }
+]
 }
