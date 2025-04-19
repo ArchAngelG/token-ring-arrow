@@ -3,7 +3,11 @@
   "title": "Token Ring Arrow",
   "description": "Replaces token rotation with ring rotation and adds an arrow.",
   "version": "1.0.0",
-  "author": "ArchAngel_G",
+  "authors": [
+    {
+    "name": "ArchAngel_G"
+    }
+  ],
   "minimumCoreVersion": "11",
   "compatibleCoreVersion": "11",
   "scripts": ["scripts/main.js"],
@@ -14,9 +18,9 @@
   "url": "https://github.com/ArchAngelG/token-ring-arrow",
   "manifest": "https://raw.githubusercontent.com/ArchAngelG/token-ring-arrow/main/module.json",
   "download": "https://github.com/ArchAngelG/token-ring-arrow/archive/refs/heads/main.zip",
-  "dependencies": [
+  "relationships.requires": [
     {
-      "name": "lib-wrapper",
+      "id": "lib-wrapper",
       "type": "module"
     }
   ]
