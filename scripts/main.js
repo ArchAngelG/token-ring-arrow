@@ -1,71 +1,52 @@
-Hooks.once("ready", () => {
+Hooks.once("libWrapper.Ready", () => {
+  const TokenClass = CONFIG.Token.objectClass;
 
-  function drawArrowToToken(token, attempt = 0) {
-    if (!token || token.arrowSprite) return;
+  libWrapper.register("token-ring-arrow", `${TokenClass.name}.prototype.draw`, async function(wrapped, ...args) {
+    const result = await wrapped.call(this, ...args);
 
-    if (!token.children || token.w === 0 || token.h === 0) {
-      if (attempt < 10) {
-        return setTimeout(() => drawArrowToToken(token, attempt + 1), 100);
-      }
-      return;
+    // Remove previous arrow if exists
+    if (this.arrowSprite) {
+      this.removeChild(this.arrowSprite);
+      this.arrowSprite.destroy({ children: true });
+      this.arrowSprite = null;
     }
 
-    const texture = PIXI.Texture.from("modules/token-ring-arrow/assets/ring-arrow.webp");
+    const texturePath = "modules/token-ring-arrow/assets/ring-arrow.webp";
+    const texture = PIXI.Texture.from(texturePath);
 
     if (!texture.baseTexture.valid) {
-      texture.baseTexture.once("loaded", () => {
-        drawArrowToToken(token, attempt + 1);
-      });
-      return;
+      console.log(`⏳ Waiting for arrow texture for ${this.name}`);
+      texture.baseTexture.once("loaded", () => this.draw());
+      return result;
     }
 
-    const container = new PIXI.Container();
-    container.name = "arrowContainer";
-    container.position.set(token.w / 2, token.h / 2);
-
+    // Build the arrow sprite
     const arrow = new PIXI.Sprite(texture);
-    arrow.name = "arrowSprite";
     arrow.anchor.set(0.5);
-    arrow.width = token.w * 0.3;
-    arrow.height = token.h * 0.3;
-    arrow.position.set(0, token.h / 2);
-    arrow.alpha = 1;
+    arrow.width = this.w * 0.3;
+    arrow.height = this.h * 0.3;
+    arrow.position.set(0, this.h / 2); // 6 o'clock
     arrow.zIndex = 100;
 
+    // Wrap in a container to handle rotation
+    const container = new PIXI.Container();
+    container.position.set(this.w / 2, this.h / 2);
     container.addChild(arrow);
-    token.addChild(container);
-    token.arrowSprite = container;
+    container.rotation = Math.toRadians(this.document.rotation);
 
-    container.rotation = Math.toRadians(token.document.rotation);
-  }
+    this.arrowSprite = container;
+    this.addChild(container);
 
-  function drawArrowsForAllTokens() {
-    for (const token of canvas.tokens.placeables) {
-      drawArrowToToken(token);
-    }
-  }
+    console.log(`✅ Arrow sprite attached to ${this.name}`);
 
-  Hooks.on("canvasReady", () => {
-    setTimeout(drawArrowsForAllTokens, 200);
-  });
+    return result;
+  }, "WRAPPER");
+});
 
-  Hooks.once("renderSceneControls", () => {
-    setTimeout(drawArrowsForAllTokens, 500);
-  });
+Hooks.on("updateToken", (doc, change) => {
+  const token = canvas.tokens.get(doc.id);
+  if (!token?.arrowSprite) return;
 
-  Hooks.on("createToken", async doc => {
-    const token = canvas.tokens.get(doc.id);
-    if (token) drawArrowToToken(token);
-  });
-
-  Hooks.on("updateToken", (doc, change) => {
-    const token = canvas.tokens.get(doc.id);
-    if (!token || !token.arrowSprite) return;
-
-    const rotation = change.rotation ?? doc.rotation;
-    token.arrowSprite.rotation = Math.toRadians(rotation);
-  });
-
-  // Optional: single startup log
-  console.log("✅ Token Ring Arrow module initialized.");
+  const rotation = change.rotation ?? doc.rotation;
+  token.arrowSprite.rotation = Math.toRadians(rotation);
 });
