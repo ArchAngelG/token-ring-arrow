@@ -1,4 +1,5 @@
- "id": "token-ring-arrow",
+{
+  "id": "token-ring-arrow",
   "title": "Token Ring Arrow",
   "description": "Adds a rotating directional arrow to tokens.",
   "version": "1.0.0",
